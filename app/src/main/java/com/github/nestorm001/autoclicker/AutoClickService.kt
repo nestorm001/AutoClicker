@@ -26,8 +26,7 @@ class AutoClickService : AccessibilityService() {
     private fun printLeaves(info: AccessibilityNodeInfo?) {
         if (childCount(info) == 0 && info?.text != null) {
             val text = info.text
-            text.logd()
-            if (text == "1") {
+            if (text.toString() == "2") {
                 "performAction".logd()
                 info.performAction(AccessibilityNodeInfo.ACTION_CLICK)
             }
