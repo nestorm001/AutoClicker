@@ -4,8 +4,10 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.graphics.PixelFormat
+import android.os.Build
 import android.os.IBinder
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 
@@ -26,54 +28,54 @@ class FloatingClickService : Service() {
         super.onCreate()
         view = LayoutInflater.from(this).inflate(R.layout.widget, null)
 
-
         //setting the layout parameters
+        val overlayParam =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+                } else {
+                    WindowManager.LayoutParams.TYPE_PHONE
+                }
         val params = WindowManager.LayoutParams(
-                WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.TYPE_PHONE,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                overlayParam,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT)
 
 
         //getting windows services and adding the floating view to it
         manager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
         manager.addView(view, params)
-        
+
 
         //adding an touchlistener to make drag movement of the floating widget
-//        view.setOnTouchListener(object : View.OnTouchListener {
-//            private var initialX: Int = 0
-//            private var initialY: Int = 0
-//            private var initialTouchX: Float = 0.toFloat()
-//            private var initialTouchY: Float = 0.toFloat()
-//
-//            override fun onTouch(v: View, event: MotionEvent): Boolean {
-//                when (event.action) {
-//                    MotionEvent.ACTION_DOWN -> {
-//                        initialX = params.x
-//                        initialY = params.y
-//                        initialTouchX = event.rawX
-//                        initialTouchY = event.rawY
-//                        return true
-//                    }
-//
-//                    MotionEvent.ACTION_MOVE -> {
-//                        //this code is helping the widget to move around the screen with fingers
-//                        params.x = initialX + (event.rawX - initialTouchX).toInt()
-//                        params.y = initialY + (event.rawY - initialTouchY).toInt()
-//                        manager.updateViewLayout(view, params)
-//                        return true
-//                    }
-//                }
-//                return false
-//            }
-//        })
-        view.post {
-            val height = view.height
-            val width = view.width
-            view.performActionDown(width - 100f, height - 100f)
-        }
+        view.setOnTouchListener(object : View.OnTouchListener {
+            private var initialX: Int = 0
+            private var initialY: Int = 0
+            private var initialTouchX: Float = 0.toFloat()
+            private var initialTouchY: Float = 0.toFloat()
+
+            override fun onTouch(v: View, event: MotionEvent): Boolean {
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        initialX = params.x
+                        initialY = params.y
+                        initialTouchX = event.rawX
+                        initialTouchY = event.rawY
+                        return true
+                    }
+
+                    MotionEvent.ACTION_MOVE -> {
+                        //this code is helping the widget to move around the screen with fingers
+                        params.x = initialX + (event.rawX - initialTouchX).toInt()
+                        params.y = initialY + (event.rawY - initialTouchY).toInt()
+                        manager.updateViewLayout(view, params)
+                        return true
+                    }
+                }
+                return false
+            }
+        })
     }
 
     override fun onDestroy() {

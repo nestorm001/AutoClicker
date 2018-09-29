@@ -25,11 +25,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         button.setOnClickListener { shortToast("hehe ${text++}") }
         textToClick.setOnClickListener {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
-                    || Settings.canDrawOverlays(this)) {
+            if (Settings.canDrawOverlays(this)) {
                 serviceIntent = Intent(this@MainActivity, FloatingClickService::class.java)
                 startService(serviceIntent)
-                finish()
+//                moveTaskToBack(true)
             } else {
                 askPermission()
                 shortToast("You need System Alert Window Permission to do this")
@@ -57,8 +56,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && !Settings.canDrawOverlays(this)) {
+        if (!Settings.canDrawOverlays(this)) {
             askPermission()
         }
     }

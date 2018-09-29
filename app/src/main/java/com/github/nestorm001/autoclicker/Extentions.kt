@@ -1,9 +1,6 @@
 package com.github.nestorm001.autoclicker
 
-import android.os.SystemClock
 import android.util.Log
-import android.view.MotionEvent
-import android.view.View
 
 
 /**
@@ -26,12 +23,4 @@ fun Any.loge(tag: String = TAG) {
     } else {
         Log.e(tag, this.toString())
     }
-}
-
-fun View.performActionDown(x: Float, y: Float) {
-    val newTouch = MotionEvent.obtain(SystemClock.uptimeMillis(),
-            SystemClock.uptimeMillis(),
-            MotionEvent.ACTION_DOWN,
-            x, y, 0)
-    dispatchTouchEvent(newTouch)
 }
