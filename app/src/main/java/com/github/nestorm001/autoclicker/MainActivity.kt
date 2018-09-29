@@ -17,7 +17,8 @@ private const val PERMISSION_CODE = 110
 
 class MainActivity : AppCompatActivity() {
 
-    var text = 1
+    private var text = 1
+    private var serviceIntent: Intent? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +27,8 @@ class MainActivity : AppCompatActivity() {
         textToClick.setOnClickListener {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
                     || Settings.canDrawOverlays(this)) {
-                startService(Intent(this@MainActivity, FloatingClickService::class.java))
+                serviceIntent = Intent(this@MainActivity, FloatingClickService::class.java)
+                startService(serviceIntent)
                 finish()
             } else {
                 askPermission()
@@ -57,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && !Settings.canDrawOverlays(this)) {
-            askPermission();
+            askPermission()
         }
     }
 
@@ -66,5 +68,10 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                 Uri.parse("package:$packageName"))
         startActivityForResult(intent, PERMISSION_CODE)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopService(serviceIntent)
     }
 }
