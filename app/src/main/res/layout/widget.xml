@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Button
+<TextView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/button"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:text="1"/>
+    android:background="@color/widgetBackground"
+    android:paddingBottom="16dp"
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp"
+    android:paddingTop="16dp"
+    android:text="OFF"
+    android:textSize="14sp"/>

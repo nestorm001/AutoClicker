@@ -1,5 +1,6 @@
 package com.github.nestorm001.autoclicker
 
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
@@ -8,7 +9,6 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.support.v7.app.AppCompatActivity
-import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityManager
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -17,18 +17,17 @@ private const val PERMISSION_CODE = 110
 
 class MainActivity : AppCompatActivity() {
 
-    private var text = 1
     private var serviceIntent: Intent? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        button.setOnClickListener { shortToast("hehe ${text++}") }
-        textToClick.setOnClickListener {
+        button.setOnClickListener {
             if (Settings.canDrawOverlays(this)) {
-                serviceIntent = Intent(this@MainActivity, FloatingClickService::class.java)
+                serviceIntent = Intent(this@MainActivity,
+                        FloatingClickService::class.java)
                 startService(serviceIntent)
-//                moveTaskToBack(true)
+                onBackPressed()
             } else {
                 askPermission()
                 shortToast("You need System Alert Window Permission to do this")
@@ -39,7 +38,7 @@ class MainActivity : AppCompatActivity() {
     private fun checkAccess(): Boolean {
         val string = getString(R.string.accessibility_service_id)
         val manager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
-        val list = manager.getEnabledAccessibilityServiceList(AccessibilityEvent.TYPES_ALL_MASK)
+        val list = manager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC)
         for (id in list) {
             if (string == id.id) {
                 return true
@@ -69,7 +68,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        serviceIntent?.let {
+            "stop floating click service".logd()
+            stopService(it)
+        }
+        autoClickService?.let {
+            "stop auto click service".logd()
+            it.stopSelf()
+            autoClickService = null
+        }
         super.onDestroy()
-        stopService(serviceIntent)
+    }
+
+    override fun onBackPressed() {
+        moveTaskToBack(true)
     }
 }

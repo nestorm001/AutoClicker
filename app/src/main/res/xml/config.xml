@@ -4,6 +4,5 @@
     android:accessibilityFeedbackType="feedbackGeneric"
     android:accessibilityFlags="flagDefault"
     android:canPerformGestures="true"
-    android:canRetrieveWindowContent="true"
     android:description="@string/accessibility_service_description"
     android:packageNames="com.github.nestorm001.autoclicker"/>
