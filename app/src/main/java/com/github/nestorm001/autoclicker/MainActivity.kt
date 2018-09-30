@@ -52,8 +52,7 @@ class MainActivity : AppCompatActivity() {
         val hasPermission = checkAccess()
         "has access? $hasPermission".logd()
         if (!hasPermission) {
-            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
         }
         if (!Settings.canDrawOverlays(this)) {
             askPermission()

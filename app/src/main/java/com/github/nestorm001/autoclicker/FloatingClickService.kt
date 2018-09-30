@@ -22,6 +22,9 @@ import kotlin.concurrent.fixedRateTimer
 class FloatingClickService : Service() {
     private lateinit var manager: WindowManager
     private lateinit var view: View
+    private lateinit var params: WindowManager.LayoutParams
+    private var xForRecord = 0
+    private var yForRecord = 0
     private val location = IntArray(2)
     private var startDragDistance: Int = 0
     private var timer: Timer? = null
@@ -42,7 +45,7 @@ class FloatingClickService : Service() {
                 } else {
                     WindowManager.LayoutParams.TYPE_PHONE
                 }
-        val params = WindowManager.LayoutParams(
+        params = WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 overlayParam,
@@ -87,5 +90,12 @@ class FloatingClickService : Service() {
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
         "FloatingClickService onConfigurationChanged".logd()
+        val x = params.x
+        val y = params.y
+        params.x = xForRecord
+        params.y = yForRecord
+        xForRecord = x
+        yForRecord = y
+        manager.updateViewLayout(view, params)
     }
 }
