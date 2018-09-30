@@ -4,7 +4,7 @@
     android:id="@+id/button"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/widgetBackground"
+    android:background="@drawable/widget_background"
     android:paddingBottom="16dp"
     android:paddingLeft="24dp"
     android:paddingRight="24dp"

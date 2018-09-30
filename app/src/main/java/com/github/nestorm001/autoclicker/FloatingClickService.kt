@@ -3,11 +3,11 @@ package com.github.nestorm001.autoclicker
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.PixelFormat
 import android.os.Build
 import android.os.IBinder
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
@@ -55,50 +55,9 @@ class FloatingClickService : Service() {
         manager.addView(view, params)
 
         //adding an touchlistener to make drag movement of the floating widget
-        view.setOnTouchListener(object : View.OnTouchListener {
-            private var initialX: Int = 0
-            private var initialY: Int = 0
-            private var initialTouchX: Float = 0.toFloat()
-            private var initialTouchY: Float = 0.toFloat()
-            private var isDrag = false
-
-            private fun isDragging(event: MotionEvent): Boolean =
-                    ((Math.pow((event.rawX - initialTouchX).toDouble(), 2.0)
-                            + Math.pow((event.rawY - initialTouchY).toDouble(), 2.0))
-                            > startDragDistance * startDragDistance)
-
-            override fun onTouch(v: View, event: MotionEvent): Boolean {
-                when (event.action and MotionEvent.ACTION_MASK) {
-                    MotionEvent.ACTION_DOWN -> {
-                        isDrag = false
-                        initialX = params.x
-                        initialY = params.y
-                        initialTouchX = event.rawX
-                        initialTouchY = event.rawY
-                        return true
-                    }
-
-                    MotionEvent.ACTION_MOVE -> {
-                        if (!isDrag && isDragging(event)) {
-                            isDrag = true
-                        }
-                        if (!isDrag) return true
-                        params.x = initialX + (event.rawX - initialTouchX).toInt()
-                        params.y = initialY + (event.rawY - initialTouchY).toInt()
-                        manager.updateViewLayout(view, params)
-                        return true
-                    }
-
-                    MotionEvent.ACTION_UP -> {
-                        if (!isDrag) {
-                            viewOnClick()
-                            return true
-                        }
-                    }
-                }
-                return false
-            }
-        })
+        view.setOnTouchListener(TouchAndDragListener(params, startDragDistance,
+                { viewOnClick() },
+                { manager.updateViewLayout(view, params) }))
     }
 
     private var isOn = false
@@ -120,6 +79,13 @@ class FloatingClickService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        "FloatingClickService onDestroy".logd()
+        timer?.cancel()
         manager.removeView(view)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        "FloatingClickService onConfigurationChanged".logd()
     }
 }

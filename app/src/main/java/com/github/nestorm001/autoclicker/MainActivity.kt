@@ -75,6 +75,7 @@ class MainActivity : AppCompatActivity() {
         autoClickService?.let {
             "stop auto click service".logd()
             it.stopSelf()
+            it.disableSelf()
             autoClickService = null
         }
         super.onDestroy()
