@@ -1,4 +1,4 @@
-package com.github.nestorm001.autoclicker
+package com.github.nestorm001.autoclicker.service
 
 import android.app.Service
 import android.content.Context
@@ -11,6 +11,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
+import com.github.nestorm001.autoclicker.R
+import com.github.nestorm001.autoclicker.TouchAndDragListener
+import com.github.nestorm001.autoclicker.dp2px
+import com.github.nestorm001.autoclicker.logd
 import java.util.*
 import kotlin.concurrent.fixedRateTimer
 

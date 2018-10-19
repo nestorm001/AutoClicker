@@ -23,7 +23,7 @@
         </activity>
 
         <service
-            android:name=".AutoClickService"
+            android:name=".service.AutoClickService"
             android:label="@string/accessibility_service_name"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
@@ -36,7 +36,7 @@
         </service>
 
         <service
-            android:name=".FloatingClickService"
+            android:name=".service.FloatingClickService"
             android:configChanges="orientation"
             android:enabled="true"
             android:exported="false"/>

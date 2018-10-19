@@ -10,6 +10,8 @@ import android.os.Bundle
 import android.provider.Settings
 import android.support.v7.app.AppCompatActivity
 import android.view.accessibility.AccessibilityManager
+import com.github.nestorm001.autoclicker.service.FloatingClickService
+import com.github.nestorm001.autoclicker.service.autoClickService
 import kotlinx.android.synthetic.main.activity_main.*
 
 

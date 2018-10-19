@@ -1,10 +1,13 @@
-package com.github.nestorm001.autoclicker
+package com.github.nestorm001.autoclicker.service
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
 import android.content.Intent
 import android.graphics.Path
 import android.view.accessibility.AccessibilityEvent
+import com.github.nestorm001.autoclicker.MainActivity
+import com.github.nestorm001.autoclicker.bean.Event
+import com.github.nestorm001.autoclicker.logd
 
 /**
  * Created on 2018/9/28.
@@ -14,6 +17,8 @@ import android.view.accessibility.AccessibilityEvent
 var autoClickService: AutoClickService? = null
 
 class AutoClickService : AccessibilityService() {
+
+    internal val events = mutableListOf<Event>()
 
     override fun onInterrupt() {
         // NO-OP
@@ -41,13 +46,21 @@ class AutoClickService : AccessibilityService() {
         dispatchGesture(gestureDescription, null, null)
     }
 
+    fun run(newEvents: MutableList<Event>) {
+        events.clear()
+        events.addAll(newEvents)
+        val builder = GestureDescription.Builder()
+        events.forEach { builder.addStroke(it.onEvent()) }
+        dispatchGesture(builder.build(), null, null)
+    }
+
     override fun onUnbind(intent: Intent?): Boolean {
         "AutoClickService onUnbind".logd()
         autoClickService = null
         return super.onUnbind(intent)
     }
 
-    
+
     override fun onDestroy() {
         "AutoClickService onDestroy".logd()
         autoClickService = null
