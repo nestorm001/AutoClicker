@@ -8,13 +8,12 @@ import android.graphics.Point
  * Created on 2018/10/19.
  * By nesto
  */
-private val path = Path()
-
 abstract class Event {
     var startTime = 10L
     var duration = 10L
+    lateinit var path: Path
     fun onEvent(): GestureDescription.StrokeDescription {
-        path.reset()
+        path = Path()
         movePath()
         return GestureDescription.StrokeDescription(path, startTime, duration)
     }
