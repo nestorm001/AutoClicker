@@ -25,7 +25,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         button.setOnClickListener {
-            if (Settings.canDrawOverlays(this)) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N
+                    || Settings.canDrawOverlays(this)) {
                 serviceIntent = Intent(this@MainActivity,
                         FloatingClickService::class.java)
                 startService(serviceIntent)
@@ -56,7 +57,8 @@ class MainActivity : AppCompatActivity() {
         if (!hasPermission) {
             startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
         }
-        if (!Settings.canDrawOverlays(this)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && !Settings.canDrawOverlays(this)) {
             askPermission()
         }
     }
@@ -76,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         autoClickService?.let {
             "stop auto click service".logd()
             it.stopSelf()
-            it.disableSelf()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) return it.disableSelf()
             autoClickService = null
         }
         super.onDestroy()

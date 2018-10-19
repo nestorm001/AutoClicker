@@ -80,7 +80,7 @@ class FloatingClickService : Service() {
             }
         }
         isOn = !isOn
-        (view as TextView).text = "${if (isOn) "ON" else "OFF"}"
+        (view as TextView).text = if (isOn) "ON" else "OFF"
 
     }
 

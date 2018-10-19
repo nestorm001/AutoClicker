@@ -14,8 +14,28 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            // 移除无用的resource文件
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            zipAlignEnabled true
+            debuggable false
+        }
+        debug {
+            debuggable true
+        }
+    }
+
+    flavorDimensions "normal"
+
+    productFlavors {
+        local {
+            dimension "normal"
+            resConfigs("en", "xxhdpi")
+            minSdkVersion 21
+        }
+        googleplay {
+            dimension "normal"
         }
     }
 }
